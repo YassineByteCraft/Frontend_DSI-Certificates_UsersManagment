@@ -1,0 +1,8 @@
+body {
+  margin-top: 4rem; /* Add a top margin to prevent overlap */
+}
+
+/* Ensure all pages have consistent spacing */
+.page-container {
+  margin-top: 4rem;
+}

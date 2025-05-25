@@ -1,0 +1,24 @@
+.custom-toast-border .p-toast {
+  border: 2px solid #64748b !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 12px rgba(100, 116, 139, 0.15);
+}
+
+.custom-toast-border .p-toast-message {
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.custom-toast-border .p-toast-message-success {
+  border-left: 5px solid #22c55e !important;
+}
+.custom-toast-border .p-toast-message-error {
+  border-left: 5px solid #ef4444 !important;
+}
+.custom-toast-border .p-toast-message-info {
+  border-left: 5px solid #3b82f6 !important;
+}
+.custom-toast-border .p-toast-message-warn {
+  border-left: 5px solid #f59e42 !important;
+}

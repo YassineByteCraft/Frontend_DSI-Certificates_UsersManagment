@@ -1,0 +1,73 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  IconButton // Import IconButton for a close button
+} from '@mui/material';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'; // Example icon for warning/error
+import CloseIcon from '@mui/icons-material/Close'; // For a close button in the title
+
+const AuthMessageDialog = ({ open, onClose, message }) => {
+  // console.log('[AuthMessageDialog] Render. Props -> open:', open, 'message:', message);
+  // console.log('[AuthMessageDialog] Not rendering because "open" is false.'); // Removed for cleaner console in production
+
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="xs"
+      // Add a subtle border or shadow if needed, or rely on default Material-UI styling
+      PaperProps={{
+        style: {
+          borderRadius: '12px', // Slightly rounded corners
+        },
+      }}
+    >
+      <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fbe9e7' /* Light orange for warning */ }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <WarningAmberRoundedIcon sx={{ mr: 1, color: '#e65100' /* Darker orange for icon */ }} />
+          <Typography variant="h6" component="div" color="text.primary">
+            Authentication Error
+          </Typography>
+        </div>
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers sx={{ p: 3 }}>
+        <Typography variant="body1" color="text.secondary">
+          {message}
+        </Typography>
+      </DialogContent>
+      <DialogActions sx={{ p: 2 }}>
+        <Button onClick={onClose} color="primary" variant="contained" autoFocus disableElevation>
+          OK
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+AuthMessageDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired,
+};
+
+export default AuthMessageDialog;

@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form-invalid {
+    border: 2px solid red;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.thead-bottom-shadow {
+  box-shadow: 0 1px 0 0 #64748B;
+}
+
+.custom-toast-border .p-toast-message-content {
+  border: none !important;
+  border-radius: 10px !important;
+}
+.custom-toast-border .p-toast-message-success .p-toast-message-content {
+  border: 2px solid #22c55e !important;
+}
+.custom-toast-border .p-toast-message-error .p-toast-message-content {
+  border: 2px solid #ef4444 !important;
+}
+.custom-toast-border .p-toast-message-info .p-toast-message-content {
+  border: 2px solid #3b82f6 !important;
+}
+.custom-toast-border .p-toast-message-warn .p-toast-message-content {
+  border: 2px solid #f59e42 !important;
+}
