@@ -64,7 +64,6 @@ export const deleteCertificate = async (certificateId) => {
   }
 };
 
-// For backward compatibility, add getAll alias for getAllCertificates
 const certificateService = {
   getAllCertificates,
   getAllCertificates,

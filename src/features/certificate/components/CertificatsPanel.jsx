@@ -115,20 +115,20 @@ export default function CertificatePanel({
     }));
   };
 
-  const handleApplyFilters = () => {
-    const activeFilters = Object.entries(formData).reduce((acc, [key, value]) => {
-      if (value !== null && value !== "") {
-        if (key === "creationDate" || key === "expirationDate") {
-          const formatted = formatDateToDMY(value);
-          if (formatted) acc[key] = formatted;
-        } else {
-          acc[key] = value;
-        }
-      }
-      return acc;
-    }, {});
-    onFilter(activeFilters);
-  };
+  // const handleApplyFilters = () => {
+  //   const activeFilters = Object.entries(formData).reduce((acc, [key, value]) => {
+  //     if (value !== null && value !== "") {
+  //       if (key === "creationDate" || key === "expirationDate") {
+  //         const formatted = formatDateToDMY(value);
+  //         if (formatted) acc[key] = formatted;
+  //       } else {
+  //         acc[key] = value;
+  //       }
+  //     }
+  //     return acc;
+  //   }, {});
+  //   onFilter(activeFilters);
+  // };
 
   const handleSave = () => {
     setIsSubmitted(true);

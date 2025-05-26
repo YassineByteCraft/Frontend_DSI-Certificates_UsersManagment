@@ -1,21 +1,19 @@
-// src/features/users/pages/UsersPage.jsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@material-tailwind/react';
-// import { useInView } from 'react-intersection-observer'; // If you use infinite scroll
-// import useAuth from '@/features/auth/hooks/useAuth'; // Assuming you have this
 import { useUsers } from '../hooks/useUsers';
-import UsersPanel from './UsersPanel'; // Corrected component name
-import UserTable from './UsersTable'; // Corrected component name
+import UsersPanel from './UsersPanel';
+import UserTable from './UsersTable';
+import DeleteUserDialog from './DeleteUserDialog';
 import { Toast } from 'primereact/toast';
 
 export default function UsersPage() {
   const toast = useRef(null);
-  // const { user } = useAuth(); // Assuming useAuth provides the logged-in user details
 
   const {
     users,
     isLoading,
-    error: apiError, // This is your structured error: { general: "...", fields: { ... } }
+    error: apiError,
     fetchAllUsers,
     addUser,
     editUser,
@@ -26,29 +24,25 @@ export default function UsersPage() {
   const [formMode, setFormMode] = useState('hidden');
   const [editingUser, setEditingUser] = useState(null);
   const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState(-1); // 1 for asc, -1 for desc (or 'asc'/'desc')
+  const [sortOrder, setSortOrder] = useState(-1); // 1 for asc, -1 for desc
   const [filterParams, setFilterParams] = useState({});
   const [globalSearch, setGlobalSearch] = useState("");
   const [clearGlobalSearch, setClearGlobalSearch] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
   const globalSearchTimeout = useRef();
   const globalSearchInputRef = useRef();
 
-  // Derive field-specific errors directly from the hook's apiError state
   const fieldSpecificErrors = apiError?.fields || {};
 
   useEffect(() => {
-    // Ensure user role check is correctly handled if `user` comes from `useAuth`
-    // if (user && ['ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
     fetchAllUsers({ ...filterParams, page: 0, sort: `${sortField},${sortOrder === 1 ? 'asc' : 'desc'}` });
-    // }
-  }, [fetchAllUsers, sortField, sortOrder, filterParams]); // Add `user` to dependency array if it's used in condition
-
+  }, [fetchAllUsers, sortField, sortOrder, filterParams]); 
+  
   const hidePanelAndClearErrors = () => {
     if (isLoading) return;
     setEditingUser(null);
     setFormMode('hidden');
-    // Errors are managed by the useUsers hook.
-    // To explicitly clear, you might add a `clearError` function to `useUsers`.
   };
 
   const toggleMode = mode => {
@@ -57,27 +51,20 @@ export default function UsersPage() {
       setEditingUser(null);
     }
     setFormMode(next);
-    // If you have a clearError function in useUsers, you might call it here
-    // when switching modes to 'create' or 'filter' to clear stale errors.
-    // e.g., if (['create', 'filter'].includes(next)) clearUsersError();
   };
 
   const handleEditUserSetup = (u) => {
-    // Consider clearing apiError via a hook function if you don't want old errors on edit form
     setEditingUser(u);
     setFormMode('update');
   };
 
   const handleCreateUser = async (data) => {
-    // addUser from useUsers hook sets its own error state (apiError)
-    // and returns { success: boolean, message: string, errors?: object }
     const result = await addUser(data);
 
     if (result.success) {
       hidePanelAndClearErrors();
       toast.current.show({ severity: 'success', summary: 'Success', detail: result.message || 'User created successfully!', life: 3500 });
     } else {
-      // apiError is already set by the hook. fieldSpecificErrors will derive from it.
       toast.current.show({
         severity: 'error',
         summary: 'Error',
@@ -103,6 +90,24 @@ export default function UsersPage() {
     }
   };
 
+  const handleRequestDeleteUser = (user) => {
+    setUserToDelete(user);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteUser = async () => {
+    if (userToDelete) {
+      await handleDeleteUser(userToDelete.id, userToDelete.idNumber);
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+    }
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setUserToDelete(null);
+  };
+
   const handleDeleteUser = async (userId, userIdNumber) => {
     const result = await removeUser(userId, userIdNumber);
     if (result.success) {
@@ -118,7 +123,6 @@ export default function UsersPage() {
     setSortOrder(order);
   };
 
-  // Debounce global search filterParams update to avoid input focus loss
   useEffect(() => {
     if (globalSearchTimeout.current) clearTimeout(globalSearchTimeout.current);
     globalSearchTimeout.current = setTimeout(() => {
@@ -129,18 +133,15 @@ export default function UsersPage() {
     };
   }, [globalSearch]);
 
-  // Ensure input keeps focus after fetch
   useEffect(() => {
     if (globalSearchInputRef.current && document.activeElement !== globalSearchInputRef.current) {
       globalSearchInputRef.current.focus();
-      // Optionally move cursor to end
       const val = globalSearchInputRef.current.value;
       globalSearchInputRef.current.value = '';
       globalSearchInputRef.current.value = val;
     }
   }, [isLoading, globalSearch]);
 
-  // Listen for clearGlobalSearch and reset it after clearing
   useEffect(() => {
     if (clearGlobalSearch) {
       setGlobalSearch("");
@@ -148,10 +149,6 @@ export default function UsersPage() {
     }
   }, [clearGlobalSearch]);
 
-  // Infinite scroll related states - uncomment and manage if needed
-  // const { ref: infiniteScrollRef, inView } = useInView({ threshold: 0, triggerOnce: false });
-  // const [page, setPage] = useState(0);
-  // const [hasMore, setHasMore] = useState(true);
 
   return (
     <div className="w-full h-screen max-w-10xl mx-auto flex flex-col px-2 gap-2">
@@ -239,8 +236,6 @@ export default function UsersPage() {
         }}
       />
 
-      {/* Display general API error from the hook,
-          IF a general message exists AND no specific field errors are being displayed by UsersPanel. */}
       {apiError?.general && Object.keys(fieldSpecificErrors).length === 0 && (
         <div className="text-red-500 p-2 my-2 bg-red-100 border border-red-400 rounded text-sm">
           {apiError.general}
@@ -252,16 +247,20 @@ export default function UsersPage() {
           users={users}
           isLoading={isLoading}
           onEdit={handleEditUserSetup}
-          onDelete={u => handleDeleteUser(u.id, u.idNumber)}
+          onDelete={handleRequestDeleteUser}
           onRevokeTokens={adminRevokeTokens}
           onSort={handleSort}
           sortField={sortField}
-          sortOrder={sortOrder}
-          // infiniteScrollRef={infiniteScrollRef} // Pass for infinite scroll
-          // hasMore={hasMore} // Pass for infinite scroll
+          sortOrder={sortOrder} 
+          infinite scroll
         />
       </div>
-      <div className="w-full bg-white pb-1" /> {/* Footer spacer */}
+      <DeleteUserDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDeleteUser}
+      />
+      <div className="w-full bg-white pb-1 bg-[#eaf3ffd6]" />
     </div>
   );
 }

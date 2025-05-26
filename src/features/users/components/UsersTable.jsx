@@ -1,9 +1,7 @@
-// src/features/users/components/UsersTable.jsx
 import React from 'react';
 import { IconButton } from '@material-tailwind/react';
 import { formatDateToDMY } from '../../../common/utils/dateUtils';
 
-// Utility: SortIcon (remains the same)
 const SortIcon = ({ direction }) => (
   <svg
     className={`inline-block ml-1 h-3 w-3 transition-transform duration-150 ${direction === 1 ? 'rotate-180' : ''}`}
@@ -15,7 +13,6 @@ const SortIcon = ({ direction }) => (
   </svg>
 );
 
-// Utility: LoadingSpinner (remains the same)
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center p-4">
     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -28,7 +25,7 @@ const LoadingSpinner = () => (
 
 // Main Component
 export default function UserTable({
-  users = [], // Default to empty array to prevent .map error
+  users = [],
   onEdit,
   onDelete,
   onRevokeTokens,
@@ -39,7 +36,7 @@ export default function UserTable({
   infiniteScrollRef,
   hasMore
 }) {
-  // Define widths for your columns.
+  // Define widths for columns.
   const baseColumns = [
     { field: 'username', header: 'Username', sortable: true, wrapText: false, width: '12%' },
     { field: 'email', header: 'Email', sortable: true, wrapText: true, width: '18%' },
@@ -77,7 +74,6 @@ export default function UserTable({
                 key={column.field}
                 scope="col"
                 onClick={() => handleHeaderClick(column)}
-                // Removed border classes from th
                  className={`px-2 py-2 whitespace-nowrap
                    ${column.sortable
                      ? 'cursor-pointer select-none hover:bg-gray-200 hover:text-[#64748B] active:bg-gray-300 '
@@ -85,7 +81,7 @@ export default function UserTable({
                    }
                    ${sortField === column.field
                      ? 'bg-gray-200 text-[#64748B]'
-                     : 'text-white' // Ensured header text is white by default
+                     : 'text-white'
                    }`}
               >
                 {column.header}

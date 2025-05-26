@@ -185,7 +185,6 @@ export default function CertificatsPage() {
     }
   };
 
-  // Debounce global search filterParams update to avoid input focus loss
   useEffect(() => {
     if (globalSearchTimeout.current) clearTimeout(globalSearchTimeout.current);
     globalSearchTimeout.current = setTimeout(() => {
@@ -200,7 +199,6 @@ export default function CertificatsPage() {
   useEffect(() => {
     if (globalSearchInputRef.current && document.activeElement !== globalSearchInputRef.current) {
       globalSearchInputRef.current.focus();
-      // Optionally move cursor to end
       const val = globalSearchInputRef.current.value;
       globalSearchInputRef.current.value = '';
       globalSearchInputRef.current.value = val;

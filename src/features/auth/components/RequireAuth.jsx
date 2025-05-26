@@ -1,7 +1,5 @@
-// src/features/auth/components/RequireAuth.jsx
 import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
-import useAuth from '@/features/auth/hooks/useAuth';
 import GridLoader from '@/common/components/GridLoader';
 import { useAuthContext } from '@/features/auth/context/AuthContext';
 
@@ -22,7 +20,7 @@ const RequireAuth = ({ allowedRoles }) => {
 
   // Role-based access control
   if (allowedRoles && (!user?.role || !allowedRoles.includes(user.role))) {
-    return <Navigate to="/" replace />; // or an Unauthorized page
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

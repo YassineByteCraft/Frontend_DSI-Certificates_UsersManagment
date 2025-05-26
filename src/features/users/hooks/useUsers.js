@@ -7,12 +7,11 @@ export const useUsers = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Helper to normalize users data to always be an array
   const normalizeUsers = (data) => {
     if (Array.isArray(data)) return data;
     if (data && Array.isArray(data.users)) return data.users;
     if (data && Array.isArray(data.data)) return data.data;
-    if (data && Array.isArray(data.content)) return data.content; // Handle Spring Page
+    if (data && Array.isArray(data.content)) return data.content;
     return [];
   };
 

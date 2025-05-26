@@ -7,26 +7,40 @@ import AuthMessageDialog from '@/features/auth/components/AuthMessageDialog';
 
 const LoginPage = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    // REMOVE these two lines:
-    // const [error, setError] = useState('');
-    // const [dialogOpen, setDialogOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Keep this for button loading state
+    const [isLoading, setIsLoading] = useState(false);
 
     // GET error directly from AuthContext
     const { login, error: authError, clearAuthError } = useAuthContext(); // authError is the error from context
 
     // Add a local state for dialogOpen, but control it based on authError
     const [localDialogOpen, setLocalDialogOpen] = useState(false);
+    const [inputErrors, setInputErrors] = useState({ username: '', password: '' });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCredentials({ ...credentials, [name]: value });
+        setInputErrors({ ...inputErrors, [name]: '' }); // Clear error on change
+    };
+
+    const validateInputs = () => {
+        let valid = true;
+        const errors = { username: '', password: '' };
+        if (!credentials.username.trim()) {
+            errors.username = 'Username is required.';
+            valid = false;
+        }
+        if (!credentials.password.trim()) {
+            errors.password = 'Password is required.';
+            valid = false;
+        }
+        setInputErrors(errors);
+        return valid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // No need to clear local error/dialogOpen directly here
-        setLocalDialogOpen(false); // Ensure dialog is closed for a new attempt
+        setLocalDialogOpen(false);
+        if (!validateInputs()) return;
         setIsLoading(true);
         console.log("LoginPage handleSubmit: States reset, attempting login.");
 
@@ -38,9 +52,8 @@ const LoginPage = () => {
         } catch (err) {
             console.log("LoginPage handleSubmit: >>> CAUGHT AN ERROR IN LOGINPAGE <<<");
             console.error('LoginPage handleSubmit CATCH: Login error object:', err);
-            // AuthContext already sets authError, no need to setError here
             console.log("LoginPage handleSubmit CATCH: Setting localDialogOpen to true");
-            setLocalDialogOpen(true); // Open the local dialog state
+            setLocalDialogOpen(true);
         } finally {
             console.log("LoginPage handleSubmit FINALLY: Setting isLoading to false");
             setIsLoading(false);
@@ -61,15 +74,15 @@ const LoginPage = () => {
             setLocalDialogOpen(true);
         } else {
             console.log("LoginPage useEffect[authError]: Auth error is cleared, setting localDialogOpen to false.");
-            setLocalDialogOpen(false); // Ensure it closes if authError is cleared externally
+            setLocalDialogOpen(false);
         }
     }, [authError]); // Dependency on authError from context
 
     // --- CRITICAL DEBUG LOGS ---
-    console.log(`LoginPage RENDER cycle. Current state - authError: "${authError}", localDialogOpen: ${localDialogOpen}`);
+    //console.log(`LoginPage RENDER cycle. Current state - authError: "${authError}", localDialogOpen: ${localDialogOpen}`);
     const isErrorPresent = !!(authError && authError.trim()); // Check authError
     const finalOpenPropValue = localDialogOpen && isErrorPresent; // Use localDialogOpen
-    console.log(`LoginPage RENDER cycle. isErrorPresent: ${isErrorPresent}, finalOpenPropValue for dialog: ${finalOpenPropValue}`);
+    //console.log(`LoginPage RENDER cycle. isErrorPresent: ${isErrorPresent}, finalOpenPropValue for dialog: ${finalOpenPropValue}`);
     // --- END CRITICAL DEBUG LOGS ---
 
     return (
@@ -78,7 +91,7 @@ const LoginPage = () => {
                 <Typography variant="h4" color="blue-gray" className="mb-6 text-center font-bold">
                     DGAPR - DSI
                 </Typography>
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                     {/* Username Input */}
                     <div className="relative w-full">
                         <FaUser className="absolute left-3 top-3.5 text-gray-500 z-10" />
@@ -94,6 +107,9 @@ const LoginPage = () => {
                             className="pl-10"
                             labelProps={{ className: "peer-placeholder-shown:translate-x-6 peer-focus:translate-x-0 transition-transform duration-200" }}
                         />
+                        {inputErrors.username && (
+                            <span className="text-red-500 text-xs absolute left-0 -bottom-5">{inputErrors.username}</span>
+                        )}
                     </div>
                     {/* Password Input */}
                     <div className="relative w-full">
@@ -110,6 +126,9 @@ const LoginPage = () => {
                             className="pl-10"
                             labelProps={{ className: "peer-placeholder-shown:translate-x-6 peer-focus:translate-x-0 transition-transform duration-50" }}
                         />
+                        {inputErrors.password && (
+                            <span className="text-red-500 text-xs absolute left-0 -bottom-5">{inputErrors.password}</span>
+                        )}
                     </div>
                     <Button type="submit" className="mt-6" fullWidth loading={isLoading}>
                         {isLoading ? 'Logging In...' : 'Login'}
@@ -119,7 +138,7 @@ const LoginPage = () => {
             <AuthMessageDialog
                 open={finalOpenPropValue}
                 onClose={handleDialogClose}
-                message={isErrorPresent ? authError : 'Login failed. Please try again.'} // Use authError
+                message={isErrorPresent ? authError : 'Login failed. Please try again.'}
             />
         </div>
     );

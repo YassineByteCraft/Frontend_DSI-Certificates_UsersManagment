@@ -8,9 +8,7 @@ export const useCertificats = () => {
 
   // Helper to normalize certificates data to always be an array from the Page object
   const normalizeCertificates = (pageData) => {
-    // Assuming Spring Page object structure where 'content' holds the array
     if (pageData && Array.isArray(pageData.content)) return pageData.content;
-    // Fallbacks if the structure is different (though 'content' is standard for Spring Page)
     if (Array.isArray(pageData)) return pageData;
     if (pageData && Array.isArray(pageData.certificates)) return pageData.certificates;
     if (pageData && Array.isArray(pageData.data)) return pageData.data;
@@ -21,7 +19,6 @@ export const useCertificats = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // 'responsePage' will be the Spring Page object (e.g., { content: [...], last: true, totalPages: 5, ... })
       const responsePage = await certificateService.getAllCertificates(params);
       const newCertificatesArray = normalizeCertificates(responsePage);
 
@@ -45,7 +42,7 @@ export const useCertificats = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []); // Ensure dependencies are correct, e.g., if normalizeCertificates isn't defined inside or stable
+  }, []);
 
 
   const addCertificate = async (certificateData) => {
@@ -63,20 +60,6 @@ export const useCertificats = () => {
     }
   };
 
-/*   const editCertificate = async (certificateId, certificateData) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await certificateService.updateCertificate(certificateId, certificateData);
-      await fetchAllCertificates();
-      return { success: true, message: result.message, certificate: result };
-    } catch (err) {
-      setError(err.message || 'Failed to update certificate');
-      return { success: false, message: err.message || 'Failed to update certificate' };
-    } finally {
-      setIsLoading(false);
-    }
-  }; */
   const editCertificate = async (id, data) => {
   if (typeof id !== 'number' || isNaN(id)) {
     console.error('Invalid ID passed to updateCertificate:', id);
@@ -85,7 +68,7 @@ export const useCertificats = () => {
 
   try {
     await certificateService.updateCertificate(id, data);
-    await fetchAllCertificates(); // Or handle update locally if preferred
+    await fetchAllCertificates();
   } catch (error) {
     console.error(`Error updating certificate with ID ${id}:`, error);
   }

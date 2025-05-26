@@ -1,4 +1,3 @@
-// src/features/users/components/UsersPanel.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Button, Input } from '@material-tailwind/react';
@@ -37,7 +36,7 @@ export default function UsersPanel({
   onCancel,
   editingUser,
   fieldErrors = {},
-  onResetFilters, // <-- add this line
+  onResetFilters,
 }) {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -51,7 +50,7 @@ export default function UsersPanel({
           initialUpdateData[key] = editingUser[key];
         }
       });
-      setFormData({ ...initialUpdateData, password: '' }); // Ensure password is not pre-filled for updates
+      setFormData({ ...initialUpdateData, password: '' });
       setIsSubmitted(false);
     } else if (formMode === 'create' || formMode === 'filter') {
       setFormData(initialFormData);
@@ -67,7 +66,7 @@ export default function UsersPanel({
         if (filterTimeout.current) clearTimeout(filterTimeout.current);
         filterTimeout.current = setTimeout(() => {
           const activeFilters = Object.entries(updated).reduce((acc, [k, v]) => {
-            if (v !== null && v !== '' && k !== 'password') { // Exclude password from filters
+            if (v !== null && v !== '' && k !== 'password') {
               acc[k] = v;
             }
             return acc;
@@ -79,20 +78,19 @@ export default function UsersPanel({
     });
   };
 
-  const handleApplyFilters = () => {
-    const activeFilters = Object.entries(formData).reduce((acc, [key, value]) => {
-      if (value !== null && value !== "" && key !== 'password') {
-        acc[key] = value;
-      }
-      return acc;
-    }, {});
-    onFilter(activeFilters);
-  };
+  //const handleApplyFilters = () => {
+  //  const activeFilters = Object.entries(formData).reduce((acc, [key, value]) => {
+  //    if (value !== null && value !== "" && key !== 'password') {
+  //      acc[key] = value;
+  //    }
+  //    return acc;
+  //  }, {});
+  //  onFilter(activeFilters);
+  //};
 
   const handleSaveUser = () => {
     setIsSubmitted(true);
     const isValid = creationRequiredFields.every((field) => formData[field]);
-    // Email format validation
     const emailValid = /^\S+@\S+\.\S+$/.test(formData.email);
     if (!isValid || !emailValid) {
       const payload = { ...formData };
@@ -116,7 +114,7 @@ export default function UsersPanel({
     if (dataToUpdate.password === '') { // Only send password if it's been changed
       delete dataToUpdate.password;
     }
-    onUpdate(editingUser.id, dataToUpdate); // Assuming editingUser has an 'id'
+    onUpdate(editingUser.id, dataToUpdate);
   };
 
   const handleResetForm = useCallback(() => {
@@ -134,7 +132,7 @@ export default function UsersPanel({
     if (onCancel) {
         onCancel();
     } else {
-        handleResetForm(); // Fallback behavior
+        handleResetForm();
     }
   };
 
@@ -187,7 +185,6 @@ export default function UsersPanel({
           const isRequired = requiredFieldsList.includes(key);
           const clientSideRequiredError = isRequired && isSubmitted && !formData[key];
           const serverSideError = fieldErrors[key];
-          // Email format validation
           const isEmailField = key === 'email';
           const emailFormatError = isEmailField && formData[key] && !/^\S+@\S+\.\S+$/.test(formData[key]) ? 'Please enter a valid email address.' : null;
           const hasAnyError = clientSideRequiredError || !!serverSideError || !!emailFormatError;

@@ -1,9 +1,7 @@
-// CertificateTable.jsx
 import React from "react";
 import { IconButton, Button } from "@material-tailwind/react";
 import { formatDateToDMY } from "../../../common/utils/dateUtils";
 
-// Utility: SortIcon (remains the same)
 const SortIcon = ({ direction }) => (
   <svg
     className={`inline-block ml-1 h-3 w-3 transition-transform duration-150 ${direction === 1 ? 'rotate-180' : ''}`}
@@ -15,7 +13,6 @@ const SortIcon = ({ direction }) => (
   </svg>
 );
 
-// Utility: LoadingSpinner (remains the same)
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center p-4">
     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -26,7 +23,6 @@ const LoadingSpinner = () => (
   </div>
 );
 
-// Utility: getCertificateStatus (remains the same)
 const getCertificateStatus = (expirationDateString) => {
   if (!expirationDateString || expirationDateString === '--') {
     return 'normal';
@@ -64,9 +60,6 @@ export default function CertificateTable({
   isLoading,
   onLoadMore
 }) {
-  // 1. Define widths for your columns.
-  // Adjust these percentages or use fixed values (e.g., '80px') as needed.
-  // The sum of percentages should ideally be around 100% if you want the table to fit its container.
   const baseColumns = [
     { field: "idDemand", header: "ID Demand", sortable: true, wrapText: false, width: "10%" },
     { field: "demandeName", header: "Demande Name", sortable: true, wrapText: true, width: "15%" },
@@ -80,7 +73,6 @@ export default function CertificateTable({
 
   const columns = [
     ...baseColumns,
-    // Reduce the width for the "Editing" column here
     { field: "actions", header: "Editing", sortable: false, wrapText: false, width: "5%" }, // e.g., 5% or a fixed pixel value like '70px'
   ];
 

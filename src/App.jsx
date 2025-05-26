@@ -18,7 +18,7 @@ const AppContent = () => {
     // If not authenticated, only allow login page
     if (!isAuthenticated) {
         if (!isLoginPage) {
-            // If not on login, force redirect to login (no sidebar, no content)
+            // If not on login, force redirect to login.
             window.location.replace('/login');
             return <GridLoader />;
         }

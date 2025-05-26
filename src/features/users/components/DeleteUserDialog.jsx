@@ -5,16 +5,16 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 const DeleteUserDialog = ({ open, onClose, onConfirm }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogTitle>Confirmer la suppression</DialogTitle>
       <DialogContent>
-        Are you sure you want to delete this user?
+        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Annuler
         </Button>
         <Button onClick={onConfirm} color="primary">
-          Confirm
+          Confirmer
         </Button>
       </DialogActions>
     </Dialog>

@@ -74,13 +74,12 @@ export const AuthProvider = ({ children }) => {
       // The backend sends success: false for suspended/deleted users,
       // so this 'if (token)' block won't be hit for those cases.
       // The error will be caught by the catch block below due to the 401.
-      if (token) { // Assuming token is only present on actual success
+      if (token) {
         localStorage.setItem('token', token);
-        // api.defaults.headers.common['Authorization'] = `${token}`; // Already handled by useEffect [auth.token]
 
         const userData = await getCurrentUser(); // This might also throw if user data can't be fetched post-login
         setAuth({ isAuthenticated: true, user: userData, token, isLoading: false, error: null });
-        return response.data; // Or just return true / user data
+        return response.data;
       } else {
         // This else block might be redundant if backend always sends 401 for these cases.
         // If backend sends 200 OK with success:false, this would be hit.

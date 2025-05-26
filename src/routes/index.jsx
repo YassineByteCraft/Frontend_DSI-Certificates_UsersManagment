@@ -1,12 +1,11 @@
-import React, { lazy, Suspense } from 'react'; // Added lazy and Suspense
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 import RequireAuth from '@/features/auth/components/RequireAuth';
 import useAuth from '@/features/auth/hooks/useAuth';
 import GridLoader from '@/common/components/GridLoader';
-import { USER_ROLES } from '@/features/users/utils/userConstants'; // Import role constants
+import { USER_ROLES } from '@/features/users/utils/userConstants';
 
-// Lazy load components
 const LoginPage = lazy(() => import('@/features/auth/components/LoginPage'));
 const CertificatesPage = lazy(() => import('@/features/certificate/components/CertificatsPage'));
 
@@ -22,7 +21,7 @@ const LoadingSpinner = () => (
 );
 
 const AppRoutes = () => {
-    const { isAuthenticated, isLoading, user } = useAuth(); // user might be useful for direct checks if needed
+    const { isAuthenticated, isLoading, user } = useAuth();
     const location = useLocation();
 
     console.log('[AppRoutes] Current Location:', location.pathname);
@@ -64,19 +63,13 @@ const AppRoutes = () => {
 
                 {/* General Protected Routes - Accessible by any authenticated user */}
                 <Route element={<RequireAuth allowedRoles={[USER_ROLES.USER, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN]} />}>
-                    {/* If /certificates truly is for *any* authenticated user, you can omit allowedRoles,
-                        but explicitly stating them is clearer. Update based on your requirements. */}
                     <Route path="/certificates" element={<CertificatesPage />} />
                 </Route>
 
                 {/* Admin-Specific Protected Routes */}
                 <Route element={<RequireAuth allowedRoles={[USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN]} />}>
-                    {/* Add SUPER_ADMIN if that role should also access this */}
                     <Route path="/admin/usersManagement" element={<LazyUserPage />} />
                 </Route>
-
-                {/* Optional: Unauthorized page */}
-                {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
 
                 {/* Catch-all: Redirects to a sensible default based on auth status */}
                 <Route path="*" element={

@@ -7,14 +7,12 @@ import {
   DialogActions,
   Button,
   Typography,
-  IconButton // Import IconButton for a close button
+  IconButton
 } from '@mui/material';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'; // Example icon for warning/error
-import CloseIcon from '@mui/icons-material/Close'; // For a close button in the title
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import CloseIcon from '@mui/icons-material/Close';
 
 const AuthMessageDialog = ({ open, onClose, message }) => {
-  // console.log('[AuthMessageDialog] Render. Props -> open:', open, 'message:', message);
-  // console.log('[AuthMessageDialog] Not rendering because "open" is false.'); // Removed for cleaner console in production
 
   if (!open) {
     return null;
@@ -26,16 +24,15 @@ const AuthMessageDialog = ({ open, onClose, message }) => {
       onClose={onClose}
       fullWidth
       maxWidth="xs"
-      // Add a subtle border or shadow if needed, or rely on default Material-UI styling
       PaperProps={{
         style: {
-          borderRadius: '12px', // Slightly rounded corners
+          borderRadius: '12px',
         },
       }}
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fbe9e7' /* Light orange for warning */ }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <WarningAmberRoundedIcon sx={{ mr: 1, color: '#e65100' /* Darker orange for icon */ }} />
+          <WarningAmberRoundedIcon sx={{ mr: 1, color: '#e65100' }} />
           <Typography variant="h6" component="div" color="text.primary">
             Authentication Error
           </Typography>
