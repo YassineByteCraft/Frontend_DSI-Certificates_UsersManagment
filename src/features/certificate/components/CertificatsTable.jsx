@@ -40,7 +40,7 @@ const getCertificateStatus = (expirationDateString) => {
     return 'expired';
   }
   const thirtyDaysFromToday = new Date(today);
-  thirtyDaysFromToday.setDate(today.getDate() + 30);
+  thirtyDaysFromToday.setDate(today.getDate() + 30); // 30 days from today
   if (expDate < thirtyDaysFromToday) {
     return 'expiring_soon';
   }
@@ -73,7 +73,7 @@ export default function CertificateTable({
 
   const columns = [
     ...baseColumns,
-    { field: "actions", header: "Editing", sortable: false, wrapText: false, width: "5%" }, // e.g., 5% or a fixed pixel value like '70px'
+    { field: "actions", header: "Editing", sortable: false, wrapText: false, width: "5%" },
   ];
 
   const handleHeaderClick = (column) => {

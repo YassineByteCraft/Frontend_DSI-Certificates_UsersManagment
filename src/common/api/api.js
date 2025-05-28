@@ -6,7 +6,7 @@ import axios from 'axios';
 // Create an Axios instance with a base URL sourced from environment variables.
 // The base URL point to the backend API endpoint.
 const api = axios.create({
-    baseURL: import.meta.env.VITE_APP_API_URL,
+    baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000',
 });
 
 // Add a response interceptor to handle API responses and errors globally.
